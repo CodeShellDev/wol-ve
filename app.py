@@ -18,7 +18,7 @@ def listen():
 
     if data:
         id = data.get("id", None)
-        startupTime = data.get("startupTime", None)
+        startupTime = data.get("startupTime", 0)
 
         if checkVM(id):
             success = startVM(id)
