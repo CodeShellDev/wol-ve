@@ -18,6 +18,7 @@ def listen():
 
     if data:
         id = data.get("id", None)
+        startupTime = data.get("startupTime", None)
 
         if checkVM(id):
             success = startVM(id)
@@ -26,6 +27,8 @@ def listen():
                 output += f"VM {id} started successfully!"
             else
                 output += f"Failed to start VM {id}."
+
+            sleep(startupTime)
         elif checkLXC(id):
             success = startLXC(id)
 
@@ -33,6 +36,8 @@ def listen():
                 output += f"LXC Container {id} started successfully!"
             else
                 output += f"Failed to start LXC Container {id}."
+
+            sleep(startupTime)
 
     return jsonify(message=response)
 
