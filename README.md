@@ -24,4 +24,10 @@ sh ./start.sh
 All done.
 
 Now you can send JSON to the program on Port 9000 via http:
-{ id: "100", ip: "192.168.1.1" }
+```json
+{
+    id: "100",
+    ip: "192.168.1.1",
+    startupTime: "10" 
+}
+```
