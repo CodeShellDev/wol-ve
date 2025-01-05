@@ -71,7 +71,7 @@ def checkVM(id):
     except subprocess.CalledProcessError:
         return False
 
-def chechLXC(id):
+def checkLXC(id):
     try:
         subprocess.run(["pct", "status", str(id)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return True
