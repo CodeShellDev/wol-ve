@@ -25,7 +25,7 @@ def listen():
 
             if success:
                 output += f"VM {id} started successfully!"
-            else
+            else:
                 output += f"Failed to start VM {id}."
 
             sleep(startupTime)
@@ -34,7 +34,7 @@ def listen():
 
             if success:
                 output += f"LXC Container {id} started successfully!"
-            else
+            else:
                 output += f"Failed to start LXC Container {id}."
 
             sleep(startupTime)
