@@ -1,8 +1,11 @@
 from flask import Flask, Response, request, jsonify
 from time import sleep
 import subprocess
+import os
 
 app = Flask(__name__)
+
+os.environ["PATH"] += ":/usr/bin:/usr/sbin"
 
 @app.route("/", methods=["POST"])
 def listen():
