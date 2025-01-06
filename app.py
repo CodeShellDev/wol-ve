@@ -12,12 +12,8 @@ def listen():
     data = request.json
 
     success = False
-    output = ""
 
-    response = {
-        "success": success,
-        "output": output
-    }
+    output = ""
 
     if data:
         id = data.get("id", None)
@@ -41,6 +37,11 @@ def listen():
                 output += f"Failed to start LXC Container {id}."
 
             sleep(startupTime)
+
+    response = {
+        "success": success,
+        "output": output
+    }
 
     return jsonify(message=response)
 
