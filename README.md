@@ -11,14 +11,16 @@ After that you need to initialize the program,
 
 **Run**
 ```
-sh ./init.sh
+sudo chmod +x ./init.sh
+bash ./init.sh
 ```
 
 To start the program,
 
 **Run**
 ```
-sh ./start.sh
+sudo chmod +x ./start.sh
+bash ./start.sh
 ```
 
 All done.
