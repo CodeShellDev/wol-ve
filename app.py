@@ -19,7 +19,8 @@ def listen():
         id = data.get("id", None)
         startupTime = data.get("startupTime", 0)
 
-        if checkVM(id):
+        vmStatus = checkVM(id)
+        if vmStatus == "OFF":
             success = startVM(id)
 
             if success:
@@ -28,15 +29,23 @@ def listen():
                 output += f"Failed to start VM {id}."
 
             sleep(startupTime)
-        elif checkLXC(id):
-            success = startLXC(id)
+        elif vmStatus == "ON":
+            success = True
 
-            if success:
-                output += f"LXC Container {id} started successfully!"
-            else:
-                output += f"Failed to start LXC Container {id}."
-
-            sleep(startupTime)
+        if not success:
+            lxcStatus = checkLXC(id)
+            
+            if lxcStatus == "OFF":
+                success = startLXC(id)
+    
+                if success:
+                    output += f"LXC Container {id} started successfully!"
+                else:
+                    output += f"Failed to start LXC Container {id}."
+    
+                sleep(startupTime)
+            elif lxcStatus == "ON":
+                success = True
 
     response = {
         "success": success,
@@ -74,9 +83,15 @@ def checkVM(id):
         
         status_output = result.stdout.decode().strip()
         
-        return "status: running" in status_output
-    except subprocess.CalledProcessError:
-        return False
+        if "status: running" in status_output:
+            infoLog(f"VM {id} is already running!")
+            return "ON"
+        else:
+            return "OFF"
+    except subprocess.CalledProcessError as e:
+        infoLog(f"Error: {e}")
+        infoLog(f"Failed to get status of VM {id}.")
+        return "ERR"
 
 def checkLXC(id):
     try:
@@ -84,9 +99,15 @@ def checkLXC(id):
 
         status_output = result.stdout.decode().strip()
         
-        return "status: running" in status_output
-    except subprocess.CalledProcessError:
-        return False
+        if "status: running" in status_output:
+            infoLog(f"LXC container {id} is already running!")
+            return "ON"
+        else:
+            return "OFF"
+    except subprocess.CalledProcessError as e:
+        infoLog(f"Error: {e}")
+        infoLog(f"Failed to get status of LXC container {id}.")
+        return "ERR"
 
 if __name__ == '__main__':
     app.run(debug=True, port=9000, host='0.0.0.0')
