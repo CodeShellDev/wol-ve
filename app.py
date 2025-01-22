@@ -70,15 +70,21 @@ def startLXC(id):
 
 def checkVM(id):
     try:
-        subprocess.run(["qm", "status", str(id)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
+        result = subprocess.run(["qm", "status", str(id)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
+        status_output = result.stdout.decode().strip()
+        
+        return "status: running" in status_output
     except subprocess.CalledProcessError:
         return False
 
 def checkLXC(id):
     try:
-        subprocess.run(["pct", "status", str(id)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
+        result = subprocess.run(["pct", "status", str(id)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        status_output = result.stdout.decode().strip()
+        
+        return "status: running" in status_output
     except subprocess.CalledProcessError:
         return False
 
