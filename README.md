@@ -1,8 +1,8 @@
 # Getting Started
 
-First download all of the files **(except README.md and .gitignore)**.
+First download all of the files
 
-Then you need to install python version 3.9,
+Then you need to install python version 3.9
 
 > [!IMPORTANT]
 > This program was only tested with version 3.9  
@@ -37,3 +37,5 @@ Now you can send JSON to the program on Port 9000 via http:
 	"startupTime": "10"
 }
 ```
+
+And your vm with `ID`: `100` and its host will startup.
