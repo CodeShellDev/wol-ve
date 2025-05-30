@@ -39,3 +39,11 @@ Now you can send JSON to the program on Port 9000 via http:
 ```
 
 And your vm with `ID`: `100` and its host will startup.
+
+# Integration
+
+Check out the full `WoL-Stack`:
+
+- [WoL-Redirect](https://github.com/codeshelldev/wol-redirect)
+- [WoL-Client](https://github.com/codeshelldev/wol-client)
+- [WoL-Dockerized](https://github.com/codeshelldev/wol-dockerized)
