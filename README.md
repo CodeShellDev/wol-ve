@@ -41,6 +41,9 @@ chmod +x wol-ve
 ./wol-ve
 ```
 
+> [!IMPORTANT]
+> If you get this error: `Error pinging HOST: socket: permission denied` then you might need to run the binary with privileges.
+
 ## Usage
 
 Start a VM or LXC instance by sending a POST request to `/wake`.  
