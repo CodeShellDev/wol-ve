@@ -18,7 +18,7 @@ func StartLXD(id string) error {
 func existsLXD(id string) bool {
 	cmd := exec.Command("lxc", "info", id)
 
-	return cmd.Run() != nil
+	return cmd.Run() == nil
 }
 
 func IsLXD() bool {

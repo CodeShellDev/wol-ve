@@ -20,13 +20,13 @@ func StartPVE(id string) error {
 func existsPVEVM(id string) bool {
 	cmd := exec.Command("qm", "status", id)
 
-	return cmd.Run() != nil
+	return cmd.Run() == nil
 }
 
 func existsPVELXC(id string) bool {
 	cmd := exec.Command("pct", "status", id)
 
-	return cmd.Run() != nil
+	return cmd.Run() == nil
 }
 
 func startPVEVM(id string) error {
