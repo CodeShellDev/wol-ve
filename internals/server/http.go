@@ -29,7 +29,7 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
         return
     }
 
-    if body.ID == "" || body.IP == "" {
+    if body.ID == "" {
         http.Error(w, "Bad Request: missing required fields", http.StatusBadRequest)
         return
     }
@@ -66,37 +66,38 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Debug("Pinging virtual host")
+	if body.IP != "" {
+		logger.Debug("Pinging virtual host")
 
-	reachable, err := tryPing(client, body.IP, 
-		func() (bool, error) {
-			sendToClient(client, map[string]any{
-				"success": true,
-				"message": "Virtual host is reachable.",
-			})
-			return true, nil
-		},
-		func() (bool, error) {
-			sendToClient(client, map[string]any{
-				"success": false,
-				"message": "Virtual host is unreachable.",
-			})
-			return false, nil
-		},
-	)
+		reachable, err := tryPing(client, body.IP, 
+			func() (bool, error) {
+				sendToClient(client, map[string]any{
+					"success": true,
+					"message": "Virtual host is reachable.",
+				})
+				return true, nil
+			},
+			func() (bool, error) {
+				sendToClient(client, map[string]any{
+					"success": false,
+					"message": "Virtual host is unreachable.",
+				})
+				return false, nil
+			},
+		)
 
-	logger.Debug("Virtual host is unreachable")
+		logger.Debug("Virtual host is unreachable")
 
-	if reachable || err != nil {
-		closeClient(client)
-		return
+		if reachable || err != nil {
+			closeClient(client)
+			return
+		}
 	}
 
 	sendToClient(client, map[string]any{
 		"success": false,
 		"message": "Starting virtual host...",
 	})
-
 
 	err = ve.StartVirtualHost(body.ID)
 
@@ -113,54 +114,56 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	logger.Debug("Pinging virtual host again")
+	if body.IP != "" {
+		logger.Debug("Pinging virtual host again")
 
-	if body.StartupTime != nil {
-		time.Sleep(time.Duration(*body.StartupTime) * time.Second)
+		if body.StartupTime != nil {
+			time.Sleep(time.Duration(*body.StartupTime) * time.Second)
 
-		reachable, err = tryPing(client, body.IP, 
-			func() (bool, error) {
-				sendToClient(client, map[string]any{
-					"success": true,
-					"message": "Virtual host is now reachable.",
-				})
-				return true, nil
-			},
-			func() (bool, error) {
-				sendToClient(client, map[string]any{
-					"success": false,
-					"error": true,
-					"message": "Virtual host is still unreachable.",
-				})
-				return false, nil
-			},
-		)
+			reachable, _ := tryPing(client, body.IP, 
+				func() (bool, error) {
+					sendToClient(client, map[string]any{
+						"success": true,
+						"message": "Virtual host is now reachable.",
+					})
+					return true, nil
+				},
+				func() (bool, error) {
+					sendToClient(client, map[string]any{
+						"success": false,
+						"error": true,
+						"message": "Virtual host is still unreachable.",
+					})
+					return false, nil
+				},
+			)
 
-		if reachable {
-			logger.Debug("Virtual host is now reachable.")
-		} else {
-			logger.Debug("Virtual host is still unreachable.")
+			if reachable {
+				logger.Debug("Virtual host is now reachable.")
+			} else {
+				logger.Debug("Virtual host is still unreachable.")
+			}
+
+			closeClient(client)
+			return
 		}
 
-		closeClient(client)
-		return
-	}
+		success, err := tryPingInterval(client, config.ENV.PING_INTERVAL, config.ENV.PING_RETRIES, body.IP)
 
-	success, err := tryPingInterval(client, config.ENV.PING_INTERVAL, config.ENV.PING_RETRIES, body.IP)
-
-	if success {
-		logger.Debug("Virtual host is now reachable.")
-		sendToClient(client, map[string]any{
-			"success": true,
-			"message": "Virtual Host is now reachable.",
-		})
-	} else if !success && err == nil {
-		logger.Debug("Virtual Host is still unreachable.")
-		sendToClient(client, map[string]any{
-			"success": false,
-			"error": true,
-			"message": "Virtual Host is still unreachable.",
-		})
+		if success {
+			logger.Debug("Virtual host is now reachable.")
+			sendToClient(client, map[string]any{
+				"success": true,
+				"message": "Virtual Host is now reachable.",
+			})
+		} else if !success && err == nil {
+			logger.Debug("Virtual Host is still unreachable.")
+			sendToClient(client, map[string]any{
+				"success": false,
+				"error": true,
+				"message": "Virtual Host is still unreachable.",
+			})
+		}
 	}
 
 	closeClient(client)
