@@ -56,8 +56,7 @@ curl -X POST "http://wol-ve:9000/wake" \
          }'
 ```
 
-> **Note**
->
+> [!NOTE]
 > - `startupTime` is optional.
 > - If `startupTime` is supplied, it acts as a **maximum wait time** while still allowing the ping-based readiness check.
 > - If `startupTime` is omitted, readiness depends entirely on the ping logic using [`PING_INTERVAL`](#ping_interval) and [`PING_RETRIES`](#ping_retries).
