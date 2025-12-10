@@ -46,7 +46,7 @@ chmod +x wol-ve
 Start a VM or LXC instance by sending a POST request to `/wake`.  
 Example: start an instance with ID `100`:
 
-```
+```bash
 curl -X POST "http://wol-ve:9000/wake" \
      -H "Content-Type: application/json" \
      -d '{
@@ -57,6 +57,7 @@ curl -X POST "http://wol-ve:9000/wake" \
 ```
 
 > [!NOTE]
+>
 > - `startupTime` is optional.
 > - If `startupTime` is supplied, it acts as a **maximum wait time** while still allowing the ping-based readiness check.
 > - If `startupTime` is omitted, readiness depends entirely on the ping logic using [`PING_INTERVAL`](#ping_interval) and [`PING_RETRIES`](#ping_retries).
