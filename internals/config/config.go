@@ -10,6 +10,8 @@ import (
 
 var ENV = &structure.ENV{
 	LOG_LEVEL: "info",
+	PORT: "9000",
+	ADDR: "0.0.0.0",
 	PING_INTERVAL: 5,
 	PING_RETRIES: 3,
 }
@@ -21,7 +23,17 @@ func Load() {
 		ENV.LOG_LEVEL = logLevel
 	}
 
-	ENV.PORT = os.Getenv("PORT")
+	port := os.Getenv("PORT")
+
+	if port != "" {
+		ENV.PORT = port
+	}
+
+	addr := os.Getenv("ADDR")
+
+	if addr != "" {
+		ENV.ADDR = addr
+	}
 
 	pingInterval := os.Getenv("PING_INTERVAL")
 

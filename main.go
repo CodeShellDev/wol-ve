@@ -21,7 +21,7 @@ func main() {
 
 	config.Log()
 
-	addr := "0.0.0.0:" + config.ENV.PORT
+	addr := config.ENV.ADDR + ":" + config.ENV.PORT
 
 	srv := &http.Server{
 		Addr:    addr,
