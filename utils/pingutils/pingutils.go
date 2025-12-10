@@ -1,6 +1,7 @@
 package pingutils
 
 import (
+	"os"
 	"time"
 
 	probing "github.com/prometheus-community/pro-bing"
@@ -13,6 +14,7 @@ func Ping(addr string) (bool, error) {
 		return false, err
 	}
 
+	pinger.SetPrivileged(os.Geteuid() == 0)
 	pinger.Count = 3
 	pinger.Timeout = 5 * time.Second
 	
