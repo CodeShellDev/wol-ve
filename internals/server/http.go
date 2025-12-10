@@ -114,12 +114,14 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	if body.StartupTime != nil {
+		time.Sleep(time.Duration(*body.StartupTime) * time.Second)
+	}
+
 	if body.IP != "" {
 		logger.Debug("Pinging virtual host again")
 
 		if body.StartupTime != nil {
-			time.Sleep(time.Duration(*body.StartupTime) * time.Second)
-
 			reachable, _ := tryPing(client, body.IP, 
 				func() (bool, error) {
 					sendToClient(client, map[string]any{
