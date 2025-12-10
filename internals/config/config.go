@@ -10,7 +10,7 @@ import (
 
 var ENV = &structure.ENV{
 	LOG_LEVEL: "info",
-	PORT: "9000",
+	PORT: "9999",
 	ADDR: "0.0.0.0",
 	PING_INTERVAL: 5,
 	PING_RETRIES: 3,
