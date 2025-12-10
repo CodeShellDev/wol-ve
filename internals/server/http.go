@@ -86,12 +86,12 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 			},
 		)
 
-		logger.Debug("Virtual host is unreachable")
-
 		if reachable || err != nil {
 			closeClient(client)
 			return
 		}
+
+		logger.Debug("Virtual host is unreachable")
 	}
 
 	sendToClient(client, map[string]any{
