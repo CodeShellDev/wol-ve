@@ -32,13 +32,13 @@ func startVirshLXC(id string) error {
 func existsVirshVM(id string) bool {
 	cmd := exec.Command("virsh", "dominfo", id)
 
-	return cmd.Run() == nil
+	return cmd.Run() != nil
 }
 
 func existsVirshLXC(id string) bool {
 	cmd := exec.Command("virsh", "-c", "lxc:///", "dominfo", id)
 
-	return cmd.Run() == nil
+	return cmd.Run() != nil
 }
 
 func IsVirsh() bool {

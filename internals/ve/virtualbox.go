@@ -24,7 +24,7 @@ func StartVirtualBoxVM(id string) error {
 func existsVirtualBoxVM(id string) bool {
 	cmd := exec.Command("VBoxManage", "showvminfo", id)
 
-	return cmd.Run() == nil
+	return cmd.Run() != nil
 }
 
 func IsVirtualBox() bool {

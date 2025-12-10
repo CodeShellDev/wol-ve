@@ -24,13 +24,13 @@ func StartVMWare(id string) error {
 func existsVMWareVM(id string) bool {
 	cmd := exec.Command("vim-cmd", "vmsvc/getallvms", "|", "grep", "-w", id)
 
-	return cmd.Run() == nil
+	return cmd.Run() != nil
 }
 
 func existsVMWareFusionVM(id string) bool {
 	cmd := exec.Command("test", "-f", id)
 
-	return cmd.Run() == nil
+	return cmd.Run() != nil
 }
 
 func IsVMWare() bool {
