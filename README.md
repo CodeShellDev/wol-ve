@@ -47,7 +47,7 @@ Start a VM or LXC instance by sending a POST request to `/wake`.
 Example: start an instance with ID `100`:
 
 ```bash
-curl -X POST "http://wol-ve:9000/wake" \
+curl -X POST "http://wol-ve:9999/wake" \
      -H "Content-Type: application/json" \
      -d '{
            "id": "100",
@@ -69,7 +69,7 @@ The `/wake` endpoint returns a `client_id`.
 Use it to open a WebSocket connection:
 
 ```
-ws://wol-ve:9000/ws
+ws://wol-ve:9999/ws
 ```
 
 The WebSocket sends structured updates during the startup sequence:
