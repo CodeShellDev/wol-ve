@@ -43,11 +43,11 @@ chmod +x wol-ve
 
 ## Usage
 
-Start a VM or LXC instance by sending a POST request to `/start`.  
+Start a VM or LXC instance by sending a POST request to `/wake`.  
 Example: start an instance with ID `100`:
 
 ```
-curl -X POST "http://wol-ve:9000/start" \
+curl -X POST "http://wol-ve:9000/wake" \
      -H "Content-Type: application/json" \
      -d '{
            "id": "100",
@@ -65,7 +65,7 @@ curl -X POST "http://wol-ve:9000/start" \
 
 ## WebSocket Updates
 
-The `/start` endpoint returns a `client_id`.  
+The `/wake` endpoint returns a `client_id`.  
 Use it to open a WebSocket connection:
 
 ```
