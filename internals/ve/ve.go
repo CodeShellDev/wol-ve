@@ -27,9 +27,5 @@ func StartVirtualHost(id string) error {
 		return StartRawLXC(id)
 	}
 
-	if IsHyperV() {
-		return StartHyperV(id)
-	}
-
 	return errors.New("No virtual environment detected")
 }
