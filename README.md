@@ -1,49 +1,97 @@
-# Getting Started
+<h1 align="center">WoL VE</h1>
 
-First download all of the files
+<p align="center">
+🖥️ Start VMs and LXCs · HTTP & WebSocket API · Multi-Platform
+</p>
 
-Then you need to install python version 3.9
+<div align="center">
+  <a href="https://github.com/codeshelldev/wol-ve/releases">
+    <img 
+        src="https://img.shields.io/github/v/release/codeshelldev/wol-ve?sort=semver&logo=github&label=Release" 
+        alt="GitHub release"
+    >
+  </a>
+  <a href="https://github.com/codeshelldev/wol-ve/stargazers">
+    <img 
+        src="https://img.shields.io/github/stars/codeshelldev/wol-ve?style=flat&logo=github&label=Stars" 
+        alt="GitHub stars"
+    >
+  </a>
+  <a href="./LICENSE">
+    <img 
+        src="https://img.shields.io/badge/License-MIT-green.svg"
+        alt="License: MIT"
+    >
+  </a>
+</div>
 
-> [!IMPORTANT]
-> This program was only tested with version 3.9  
-> so be careful when upgrading to the newest version of python
+---
 
-After that you need to initialize the program,
+**WoL VE** is a lightweight Go program exposing an **HTTP and WebSocket API** for starting virtual environments such as **virtual machines** and **LXC containers**.
 
-**Run**
+Use standalone or together with  
+[**WoL-Redirect**](https://github.com/codeshelldev/wol-redirect) for a web-based UI.
+
+## Installation
+
+Download the latest binary from the Releases page, mark it executable, and run:
+
+```bash
+chmod +x wol-ve
+./wol-ve
+```
+
+## Usage
+
+Start a VM or LXC instance by sending a POST request to `/wake`.  
+Example: start an instance with ID `100`:
 
 ```
-sudo chmod +x ./init.sh
-bash ./init.sh
+curl -X POST "http://wol-ve:9000/wake" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "id": "100",
+           "ip": "192.168.1.1",
+           "startupTime": 5
+         }'
 ```
 
-To start the program,
+> **Note**
+>
+> - `startupTime` is optional.
+> - If `startupTime` is supplied, it acts as a **maximum wait time** while still allowing the ping-based readiness check.
+> - If `startupTime` is omitted, readiness depends entirely on the ping logic using [`PING_INTERVAL`](#ping_interval) and [`PING_RETRIES`](#ping_retries).
+> - `ip` is optional and is only needed if ping-based readiness should be used.
 
-**Run**
+## WebSocket Updates
+
+The `/wake` endpoint returns a `client_id`.  
+Use it to open a WebSocket connection:
 
 ```
-sudo chmod +x ./start.sh
-bash ./start.sh
+ws://wol-ve:9000/ws
 ```
 
-All done.
+The WebSocket sends structured updates during the startup sequence:
 
-Now you can send JSON to the program on Port 9000 via http:
+- `success`: `true` when the process completes
+- `error`: `true` if startup fails
+- `message`: descriptive status or error details
 
-```json
-{
-	"id": "100",
-	"ip": "192.168.1.1",
-	"startupTime": "10"
-}
-```
+## Configuration
 
-And your vm with `ID`: `100` and its host will startup.
+### `PING_INTERVAL`
 
-# Integration
+Interval in seconds for pinging when `startupTime` is not provided.
 
-Check out the full `WoL-Stack`:
+### `PING_RETRIES`
 
-- [WoL-Redirect](https://github.com/codeshelldev/wol-redirect)
-- [WoL-Client](https://github.com/codeshelldev/wol-client)
-- [WoL-Dockerized](https://github.com/codeshelldev/wol-dockerized)
+Number of retries for pinging when `startupTime` is not provided before timing out.
+
+## Contributing
+
+Have suggestions or improvements? Feel free to open an issue or submit a Pull Request.
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
