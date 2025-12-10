@@ -1,25 +1,36 @@
 package ve
 
-import "os/exec"
+import (
+	"errors"
+	"os/exec"
+)
 
 func StartVMWare(id string) error {
-	cmd := exec.Command("vim-cmd", "vmsvc/power.on", id)
+	if existsVMWareVM(id) {
+		cmd := exec.Command("vim-cmd", "vmsvc/power.on", id)
 
-	err := cmd.Run()
-
-	if err == nil {
-		return nil
+		return cmd.Run()
 	}
 
-	cmd = exec.Command("vmrun", "start", id)
+	if existsVMWareFusionVM(id) {
+		cmd := exec.Command("vmrun", "start", id)
 
-	err = cmd.Run()
-
-	if err == nil {
-		return nil
+		return cmd.Run()
 	}
 
-	return err
+	return errors.New("Could not find vm with " + id)
+}
+
+func existsVMWareVM(id string) bool {
+	cmd := exec.Command("vim-cmd", "vmsvc/getallvms", "|", "grep", "-w", id)
+
+	return cmd.Run() == nil
+}
+
+func existsVMWareFusionVM(id string) bool {
+	cmd := exec.Command("test", "-f", id)
+
+	return cmd.Run() == nil
 }
 
 func IsVMWare() bool {

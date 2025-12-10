@@ -1,25 +1,44 @@
 package ve
 
-import "os/exec"
+import (
+	"errors"
+	"os/exec"
+)
 
 func StartPVE(id string) error {
+	if existsPVEVM(id) {
+		return startPVEVM(id)
+	}
+
+	if existsPVELXC(id) {
+		return startPVELXC(id)
+	}
+
+	return errors.New("Could not find vm/lxc with " + id)
+}
+
+func existsPVEVM(id string) bool {
+	cmd := exec.Command("qm", "status", id)
+
+	return cmd.Run() == nil
+}
+
+func existsPVELXC(id string) bool {
+	cmd := exec.Command("pct", "status", id)
+
+	return cmd.Run() == nil
+}
+
+func startPVEVM(id string) error {
 	cmd := exec.Command("qm", "start", id)
 
-	err := cmd.Run()
+	return cmd.Run()
+}
 
-	if err == nil {
-		return nil
-	}
+func startPVELXC(id string) error {
+	cmd := exec.Command("pct", "start", id)
 
-	cmd = exec.Command("pct", "start", id)
-
-	err = cmd.Run()
-
-	if err == nil {
-		return nil
-	}
-
-	return err
+	return cmd.Run()
 }
 
 func IsPVE() bool {

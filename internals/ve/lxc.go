@@ -1,8 +1,15 @@
 package ve
 
-import "os/exec"
+import (
+	"errors"
+	"os/exec"
+)
 
 func StartRawLXC(id string) error {
+	if existsRawLXC(id) {
+		return errors.New("Could not find lxc with " + id)
+	}
+
 	cmd := exec.Command("lxc-start", "-n", id)
 
 	err := cmd.Run()
@@ -12,6 +19,12 @@ func StartRawLXC(id string) error {
 	}
 
 	return err
+}
+
+func existsRawLXC(id string) bool {
+	cmd := exec.Command("lxc-info", "-n", id)
+
+	return cmd.Run() == nil
 }
 
 func IsRawLXC() bool {

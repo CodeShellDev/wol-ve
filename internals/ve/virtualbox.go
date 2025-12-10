@@ -1,8 +1,15 @@
 package ve
 
-import "os/exec"
+import (
+	"errors"
+	"os/exec"
+)
 
-func StartVirtualBox(id string) error {
+func StartVirtualBoxVM(id string) error {
+	if !existsVirtualBoxVM(id) {
+		return errors.New("Could not find vm with " + id)
+	}
+
 	cmd := exec.Command("VBoxManage", "startvm", id, "--type headless")
 
 	err := cmd.Run()
@@ -12,6 +19,12 @@ func StartVirtualBox(id string) error {
 	}
 
 	return err
+}
+
+func existsVirtualBoxVM(id string) bool {
+	cmd := exec.Command("VBoxManage", "showvminfo", id)
+
+	return cmd.Run() == nil
 }
 
 func IsVirtualBox() bool {

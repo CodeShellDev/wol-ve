@@ -16,7 +16,7 @@ func StartVirtualHost(id string) error {
 	}
 
 	if IsVirtualBox() {
-		return StartVirtualBox(id)
+		return StartVirtualBoxVM(id)
 	}
 
 	if IsLXD() {

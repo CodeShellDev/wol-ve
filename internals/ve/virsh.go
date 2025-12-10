@@ -1,25 +1,44 @@
 package ve
 
-import "os/exec"
+import (
+	"errors"
+	"os/exec"
+)
 
 func StartVirsh(id string) error {
+	if existsVirshVM(id) {
+		startVirshVM(id)
+	}
+
+	if existsVirshLXC(id) {
+		startVirshLXC(id)
+	}
+
+	return errors.New("Could not find vm/lxc with " + id)
+}
+
+func startVirshVM(id string) error {
 	cmd := exec.Command("virsh", "start", id)
 
-	err := cmd.Run()
+	return cmd.Run()
+}
 
-	if err == nil {
-		return nil
-	}
+func startVirshLXC(id string) error {
+	cmd := exec.Command("virsh", "-c", "lxc:///", "start", id)
 
-	cmd = exec.Command("virsh", "-c", "lxc:///", "start", id)
+	return cmd.Run()
+}
 
-	err = cmd.Run()
+func existsVirshVM(id string) bool {
+	cmd := exec.Command("virsh", "dominfo", id)
 
-	if err == nil {
-		return nil
-	}
+	return cmd.Run() == nil
+}
 
-	return err
+func existsVirshLXC(id string) bool {
+	cmd := exec.Command("virsh", "-c", "lxc:///", "dominfo", id)
+
+	return cmd.Run() == nil
 }
 
 func IsVirsh() bool {

@@ -1,17 +1,24 @@
 package ve
 
-import "os/exec"
+import (
+	"errors"
+	"os/exec"
+)
 
 func StartLXD(id string) error {
-	cmd := exec.Command("lxc", "start", id)
-
-	err := cmd.Run()
-
-	if err == nil {
-		return nil
+	if !existsLXD(id) {
+		return errors.New("Could not find lxc with " + id)
 	}
 
-	return err
+	cmd := exec.Command("lxc", "start", id)
+
+	return cmd.Run()
+}
+
+func existsLXD(id string) bool {
+	cmd := exec.Command("lxc", "info", id)
+
+	return cmd.Run() == nil
 }
 
 func IsLXD() bool {
