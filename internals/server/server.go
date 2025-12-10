@@ -9,7 +9,7 @@ import (
 func Handle() http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/wake", httpHandler)
+	mux.HandleFunc("/start", httpHandler)
 
     mux.HandleFunc("/ws", websocketHandler)
 
