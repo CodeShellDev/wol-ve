@@ -73,14 +73,14 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 			func() (bool, error) {
 				sendToClient(client, map[string]any{
 					"success": true,
-					"message": "Virtual host is reachable.",
+					"message": "Virtual host is reachable",
 				})
 				return true, nil
 			},
 			func() (bool, error) {
 				sendToClient(client, map[string]any{
 					"success": false,
-					"message": "Virtual host is unreachable.",
+					"message": "Virtual host is unreachable",
 				})
 				return false, nil
 			},
@@ -96,7 +96,7 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 
 	sendToClient(client, map[string]any{
 		"success": false,
-		"message": "Starting virtual host...",
+		"message": "Starting virtual host",
 	})
 
 	err = ve.StartVirtualHost(body.ID)
@@ -126,7 +126,7 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 				func() (bool, error) {
 					sendToClient(client, map[string]any{
 						"success": true,
-						"message": "Virtual host is now reachable.",
+						"message": "Virtual host is now reachable",
 					})
 					return true, nil
 				},
@@ -134,7 +134,7 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 					sendToClient(client, map[string]any{
 						"success": false,
 						"error": true,
-						"message": "Virtual host is still unreachable.",
+						"message": "Virtual host is still unreachable",
 					})
 					return false, nil
 				},
@@ -156,14 +156,14 @@ func httpHandler(w http.ResponseWriter, req *http.Request) {
 			logger.Debug("Virtual host is now reachable.")
 			sendToClient(client, map[string]any{
 				"success": true,
-				"message": "Virtual Host is now reachable.",
+				"message": "Virtual Host is now reachable",
 			})
 		} else if !success && err == nil {
 			logger.Debug("Virtual Host is still unreachable.")
 			sendToClient(client, map[string]any{
 				"success": false,
 				"error": true,
-				"message": "Virtual Host is still unreachable.",
+				"message": "Virtual Host is still unreachable",
 			})
 		}
 	}
